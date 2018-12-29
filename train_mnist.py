@@ -13,21 +13,25 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 
-from meshnet import MeshLayer
+from meshnet import MeshCNN, MeshFC
 
 
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.fc1 = MeshLayer(28 ** 2, 500, space_dims=10, init_delta=0.01)
-        self.fc2 = MeshLayer(500, 300, space_dims=20, init_delta=0.01)
-        self.fc3 = MeshLayer(300, 10, space_dims=10, init_delta=0.01)
+        self.conv1 = MeshCNN(1, 20, 5, init_delta=0.1)
+        self.conv2 = MeshCNN(20, 50, 5, init_delta=0.1)
+        self.fc1 = MeshFC(4 * 4 * 50, 500)
+        self.fc2 = MeshFC(500, 10)
 
     def forward(self, x):
-        x = x.view(-1, 28 ** 2)
-        x = F.tanh(F.layer_norm(self.fc1(x), (500,)))
-        x = F.tanh(F.layer_norm(self.fc2(x), (300,)))
-        x = F.layer_norm(self.fc3(x), (10,))
+        x = torch.tanh(self.conv1(x))
+        x = F.max_pool2d(x, 2, 2)
+        x = torch.tanh(self.conv2(x))
+        x = F.max_pool2d(x, 2, 2)
+        x = x.view(-1, 4 * 4 * 50)
+        x = torch.tanh(self.fc1(x))
+        x = self.fc2(x)
         return F.log_softmax(x, dim=1)
 
 
