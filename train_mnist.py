@@ -15,13 +15,13 @@ class Net(nn.Module):
         super().__init__()
         self.fc1 = MeshLayer(28 ** 2, 500, space_dims=10, init_delta=0.01)
         self.fc2 = MeshLayer(500, 300, space_dims=5, init_delta=0.01)
-        self.fc3 = MeshLayer(300, 10, space_dims=2, init_delta=0.001)
+        self.fc3 = MeshLayer(300, 10, space_dims=2, init_delta=0.01)
 
     def forward(self, x):
         x = x.view(-1, 28 ** 2)
         x = F.tanh(F.layer_norm(self.fc1(x), (500,)))
         x = F.tanh(F.layer_norm(self.fc2(x), (300,)))
-        x = self.fc3(x)
+        x = F.layer_norm(self.fc3(x), (10,))
         return F.log_softmax(x, dim=1)
 
 
