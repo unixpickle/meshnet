@@ -28,6 +28,10 @@ class MeshLayer(nn.Module):
         self.out_pos = nn.Parameter(init_out_pos)
         self.biases = nn.Parameter(torch.zeros(num_outputs))
 
+    def to(self, device):
+        super().to(device)
+        self.init_dists.to(device)
+
     def forward(self, inputs):
         dists = _distance_matrix(self.in_pos, self.out_pos)
         weights = dists - self.init_dists
