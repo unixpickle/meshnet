@@ -1,4 +1,10 @@
-# Based on: https://github.com/pytorch/examples/blob/master/mnist/main.py
+"""
+Get 96% accuracy on MNIST with a springy FC network.
+
+Test set: Average loss: 0.3888, Accuracy: 9616/10000 (96%)
+
+Based on: https://github.com/pytorch/examples/blob/master/mnist/main.py
+"""
 
 import argparse
 import torch
@@ -14,8 +20,8 @@ class Net(nn.Module):
     def __init__(self):
         super().__init__()
         self.fc1 = MeshLayer(28 ** 2, 500, space_dims=10, init_delta=0.01)
-        self.fc2 = MeshLayer(500, 300, space_dims=5, init_delta=0.01)
-        self.fc3 = MeshLayer(300, 10, space_dims=2, init_delta=0.01)
+        self.fc2 = MeshLayer(500, 300, space_dims=20, init_delta=0.01)
+        self.fc3 = MeshLayer(300, 10, space_dims=10, init_delta=0.01)
 
     def forward(self, x):
         x = x.view(-1, 28 ** 2)
