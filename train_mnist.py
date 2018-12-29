@@ -1,7 +1,7 @@
 """
-Get 96% accuracy on MNIST with a springy FC network.
+Get 99% accuracy on MNIST with a springy FC network.
 
-Test set: Average loss: 0.3888, Accuracy: 9616/10000 (96%)
+Test set: Average loss: 0.3258, Accuracy: 9862/10000 (99%)
 
 Based on: https://github.com/pytorch/examples/blob/master/mnist/main.py
 """
@@ -19,19 +19,19 @@ from meshnet import MeshCNN, MeshFC
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = MeshCNN(1, 20, 5, init_delta=0.1)
-        self.conv2 = MeshCNN(20, 50, 5, init_delta=0.1)
+        self.conv1 = MeshCNN(1, 20, 5)
+        self.conv2 = MeshCNN(20, 50, 5)
         self.fc1 = MeshFC(4 * 4 * 50, 500)
         self.fc2 = MeshFC(500, 10)
 
     def forward(self, x):
-        x = torch.tanh(self.conv1(x))
+        x = torch.tanh(F.layer_norm(self.conv1(x), (20, 24, 24)))
         x = F.max_pool2d(x, 2, 2)
-        x = torch.tanh(self.conv2(x))
+        x = torch.tanh(F.layer_norm(self.conv2(x), (50, 8, 8)))
         x = F.max_pool2d(x, 2, 2)
         x = x.view(-1, 4 * 4 * 50)
-        x = torch.tanh(self.fc1(x))
-        x = self.fc2(x)
+        x = torch.tanh(F.layer_norm(self.fc1(x), (500,)))
+        x = F.layer_norm(self.fc2(x), (10,))
         return F.log_softmax(x, dim=1)
 
 
