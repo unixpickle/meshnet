@@ -20,7 +20,7 @@ class MeshLayer(nn.Module):
 
         init_in_pos = torch.randn((num_inputs, 1, space_dims))
         init_out_pos = torch.randn((1, num_outputs, space_dims))
-        self.init_dists = nn.Paremeter(_distance_matrix(
+        self.init_dists = nn.Parameter(_distance_matrix(
             init_in_pos + init_delta * torch.randn((num_inputs, 1, space_dims)),
             init_out_pos + init_delta * torch.randn((1, num_outputs, space_dims)),
         ), requires_grad=False)
