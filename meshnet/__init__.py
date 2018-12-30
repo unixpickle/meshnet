@@ -33,7 +33,7 @@ class MeshFC(nn.Module):
     def weight_matrix(self):
         dists = _distance_matrix(self.in_pos, self.out_pos)
         init_dists = _distance_matrix(self.init_in_pos, self.init_out_pos)
-        return 0.1 * (dists - init_dists) / init_dists
+        return dists - init_dists
 
 
 class MeshCNN(MeshFC):
