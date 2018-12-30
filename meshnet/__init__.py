@@ -19,8 +19,8 @@ class MeshFC(nn.Module):
         self.num_outputs = num_outputs
         self.space_dims = space_dims
 
-        self.init_in_pos = torch.randn((num_inputs, 1, space_dims))
-        self.init_out_pos = torch.randn((1, num_outputs, space_dims))
+        self.init_in_pos = nn.Parameter(torch.randn((num_inputs, 1, space_dims)))
+        self.init_out_pos = nn.Parameter(torch.randn((1, num_outputs, space_dims)))
         self.in_pos = nn.Parameter(self.init_in_pos + init_delta *
                                    torch.randn((num_inputs, 1, space_dims)))
         self.out_pos = nn.Parameter(self.init_out_pos + init_delta *
