@@ -13,7 +13,7 @@ class MeshFC(nn.Module):
     factorization.
     """
 
-    def __init__(self, num_inputs, num_outputs, space_dims=10, init_delta=0.01):
+    def __init__(self, num_inputs, num_outputs, space_dims=5, init_delta=0.01):
         super().__init__()
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
