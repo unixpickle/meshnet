@@ -36,7 +36,7 @@ class MeshFC(nn.Module):
         return dists - init_dists
 
 
-class MeshCNN(MeshFC):
+class MeshConv2d(MeshFC):
     """
     A convolutional layer that uses mesh-based matrix
     factorization.

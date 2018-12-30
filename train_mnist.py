@@ -13,14 +13,14 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 
-from meshnet import MeshCNN, MeshFC
+from meshnet import MeshConv2d, MeshFC
 
 
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = MeshCNN(1, 20, 5)
-        self.conv2 = MeshCNN(20, 50, 5)
+        self.conv1 = MeshConv2d(1, 20, 5)
+        self.conv2 = MeshConv2d(20, 50, 5)
         self.fc1 = MeshFC(4 * 4 * 50, 500)
         self.fc2 = MeshFC(500, 10)
 
