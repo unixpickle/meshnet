@@ -13,20 +13,18 @@ class MeshFC(nn.Module):
     factorization.
     """
 
-    def __init__(self, num_inputs, num_outputs, space_dims=10, init_delta=0.01):
+    def __init__(self, num_inputs, num_outputs, space_dims=5, init_delta=0.01):
         super().__init__()
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
         self.space_dims = space_dims
 
-        init_in_pos = torch.randn((num_inputs, 1, space_dims))
-        init_out_pos = torch.randn((1, num_outputs, space_dims))
-        self.init_dists = nn.Parameter(_distance_matrix(
-            init_in_pos + init_delta * torch.randn((num_inputs, 1, space_dims)),
-            init_out_pos + init_delta * torch.randn((1, num_outputs, space_dims)),
-        ), requires_grad=False)
-        self.in_pos = nn.Parameter(init_in_pos)
-        self.out_pos = nn.Parameter(init_out_pos)
+        self.init_in_pos = nn.Parameter(torch.randn((num_inputs, 1, space_dims)))
+        self.init_out_pos = nn.Parameter(torch.randn((1, num_outputs, space_dims)))
+        self.in_pos = nn.Parameter(self.init_in_pos + init_delta *
+                                   torch.randn((num_inputs, 1, space_dims)))
+        self.out_pos = nn.Parameter(self.init_out_pos + init_delta *
+                                    torch.randn((1, num_outputs, space_dims)))
         self.biases = nn.Parameter(torch.zeros(num_outputs))
 
     def forward(self, inputs):
@@ -34,7 +32,8 @@ class MeshFC(nn.Module):
 
     def weight_matrix(self):
         dists = _distance_matrix(self.in_pos, self.out_pos)
-        return dists - self.init_dists
+        init_dists = _distance_matrix(self.init_in_pos, self.init_out_pos)
+        return dists - init_dists
 
 
 class MeshCNN(MeshFC):
